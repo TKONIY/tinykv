@@ -40,7 +40,6 @@ func (s *StandAloneStorage) Start() error {
 
 func (s *StandAloneStorage) Stop() error {
 	// Your Code Here (1).
-	debug("****** StandAloneStorage Stopp()")
 	return s.engines.Kv.Close() //这里只能close kv, 不能调用engines自带的close
 }
 
@@ -85,7 +84,7 @@ func (s *StandAloneReader) GetCF(cf string, key []byte) ([]byte, error) {
 	// Your Code here (1)
 	item, err := engine_util.GetCFFromTxn(s.txn, cf, key)
 	if err == badger.ErrKeyNotFound {
-		item = nil
+		return nil, nil
 	}
 	return item, err
 }
@@ -96,11 +95,4 @@ func (s *StandAloneReader) IterCF(cf string) engine_util.DBIterator {
 func (s *StandAloneReader) Close() {
 	// Your code here (1)
 	s.txn.Discard()
-}
-
-// debug
-const DEBUG = true
-
-func debug(v ...interface{}) {
-	log.Println(v...)
 }
