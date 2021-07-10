@@ -165,6 +165,11 @@ func newRaft(c *Config) *Raft {
 		panic(err.Error())
 	}
 	// Your Code Here (2A).
+	// 从config中加载hardState到Raft中
+	hardState, confState, err := c.Storage.InitialState()
+	if err != nil {
+		panic(err)
+	}
 	return nil
 }
 
@@ -236,4 +241,14 @@ func (r *Raft) addNode(id uint64) {
 // removeNode remove a node from raft group
 func (r *Raft) removeNode(id uint64) {
 	// Your Code Here (3A).
+}
+
+// send AppendEntries to followers and candidates
+func (r *Raft) bcastAppend() {
+
+}
+
+// after recv MsgHup, new an Election
+func (r *Raft) campaign() {
+
 }

@@ -217,10 +217,10 @@ RaftLog {
   pendingSnapshot,
 }
 /*
-				stabled applied committed
-						|			|				|
+        stabled applied committed
+            |     |       |
 +-----------*-----*-------+
-|	persisted | 		|				|
+| persisted |     |       |
 +-----------+-----+-------+
 */
 ```
