@@ -156,4 +156,72 @@ def handleAppendEntries(rpc):
 *   ready结构体用于状态机变更后向应用层返回结果(进行应用层操作如网络操作)
 *   全异步：node --channel--> raft状态机 --channel--> node
     *   保证顺序即可
-*   
+
+### 消息处理进度
+
+-   [ ] MsgHup
+    *   tickElection() -> step(msg)
+    *   很长时间没收到heartbeat
+-   [ ] MsgBeat
+    *   tickHeartbeat()-> send(msg)
+    *   发送心跳
+-   [ ] MsgPropose
+    *   不同人收到的做法不一样
+    *   leader调用bcast广播
+-   [ ] MsgAppend
+    -   [ ] bcast的广播
+-   [ ] MsgAppendResponse
+    -   [ ] handleAppendEntries() -> MsgAppendResponse()
+-   [ ] MsgRequestVote
+    -   [ ] compain()里面调用发送
+-   [ ] MsgRequestVoteResponse
+    -   [ ] ...
+-   [ ] MsgSnapshot
+    -   [ ] 
+-   [ ] MsgHeartbeat
+-   [ ] MsgHeartbeatResponse
+-   [ ] MsgTransferLeader
+-   [ ] MsgTimeoutNow
+
+```go
+Raft {
+  id,
+  Term, 		// currentTerm
+  Vote, 		// votefor
+  RaftLog, 	// log's attr
+  Prs,			// id -> MatchIndex, NextIndex
+  
+  State,
+  msgs,
+  Lead,			// leader's id
+  
+  heartbeatTimeout,
+  electionTimeout,
+  
+  heartbeatElapsed,
+  electionElapsed,
+  
+  leadTransferee,
+  PendingConfIndex,
+}
+```
+
+```go
+RaftLog {
+  storage,
+  
+  committed, 	// commitIndex
+  applied,		// lastApplied
+  stabled,			 
+  entries,
+  pendingSnapshot,
+}
+/*
+				stabled applied committed
+						|			|				|
++-----------*-----*-------+
+|	persisted | 		|				|
++-----------+-----+-------+
+*/
+```
+
